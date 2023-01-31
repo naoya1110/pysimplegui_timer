@@ -1,6 +1,7 @@
 # パッケージのインポート
 import PySimpleGUI as sg
 import time
+import winsound
 
 t_set_text = "2:00"
 t_text = t_set_text
@@ -14,8 +15,8 @@ sg.theme("DefaultNoMoreNagging")
 close_button_element = sg.Button(
                                 button_text="CLOSE",    # 表示するテキスト
                                 #button_color="blue",    # ボタンの色
-                                size=(7,2),            # サイズ
-                                font=('Arial',30),
+                                size=(8,2),            # サイズ
+                                font=('Arial',40),
                                 key="CLOSE"             # キー：イベントの判定に必要
                                 )
 
@@ -23,8 +24,8 @@ close_button_element = sg.Button(
 start_button_element = sg.Button(
                                 button_text="START",    # 表示するテキスト
                                 #button_color="blue",    # ボタンの色
-                                size=(7,2),            # サイズ
-                                font=('Arial',30),
+                                size=(8,2),            # サイズ
+                                font=('Arial',40),
                                 key="START"             # キー：イベントの判定に必要
                                 )
 
@@ -32,8 +33,8 @@ start_button_element = sg.Button(
 stop_button_element = sg.Button(
                                 button_text="STOP",    # 表示するテキスト
                                 #button_color="blue",    # ボタンの色
-                                size=(7,2),            # サイズ
-                                font=('Arial',30),
+                                size=(8,2),            # サイズ
+                                font=('Arial',40),
                                 key="STOP"             # キー：イベントの判定に必要
                                 )
 
@@ -41,14 +42,14 @@ stop_button_element = sg.Button(
 reset_button_element = sg.Button(
                                 button_text="RESET",    # 表示するテキスト
                                 #button_color="blue",    # ボタンの色
-                                size=(7,2),            # サイズ
-                                font=('Arial',30),
+                                size=(8,2),            # サイズ
+                                font=('Arial',40),
                                 key="RESET"             # キー：イベントの判定に必要
                                 )
 
 time_text_element = sg.Text(text = t_text,
                              size = (7,1),
-                             font=('Arial',200),
+                             font=('Arial',300),
                              background_color="white",
                              text_color = "green",
                              justification= "center",
@@ -64,11 +65,12 @@ layout = [[time_text_element],
 window = sg.Window(
                     title="Timer App",  # ウィンドウのタイトル
                     layout=layout,              # レイアウト
-                    size=(800, 500)             # ウィンドウの大きさ
+                    size=(1200, 650)             # ウィンドウの大きさ
                     )
 
 is_started = False
 is_stopped = False
+is_beeped = False
 
 
 mm, ss = t_set_text.split(":")
@@ -98,6 +100,9 @@ while True:
         else:
             text_color = "red"
             t_remain = abs(t_remain)
+            if not is_beeped:
+                winsound.Beep(500, 500)
+                is_beeped = True
         
         print(t_remain, t_set, t_elapsed)
         t_text = f"{int(t_remain//60)}:{str(int(t_remain%60)).zfill(2)}"
@@ -111,6 +116,7 @@ while True:
     if event == "RESET":
         is_started = False
         is_finished = False
+        is_beeped = False
         t_remain = t_set
         text_color = "green"
         time_text_element.update(t_set_text, text_color=text_color)
